@@ -10,16 +10,16 @@ workflows:
   build_and_push_image:
     jobs:
       - aws-ecr/build-and-push-image:
-          repo: sit-sre-digital-ecr
+          repo: ${ECR_REPO}
           region: ${AWS_DEFAULT_REGION}
           tag: "${CIRCLE_SHA1}"
           create-repo: true
           dockerfile: Dockerfile
-          path: ./emoji-search/
+          path: .
       - aws-ecs/deploy-service-update:
-          cluster-name: "sit-sre-digital-ecs"
-          container-image-name-updates: "container=sit-sre-digital,tag=${CIRCLE_SHA1}"
-          family: "sit-sre-digital"
-          service-name: "sit-sre-digital-service"
+          cluster-name: ${CLUSTER_NAME}
+          container-image-name-updates: "container=${CONTAINER_NAME},tag=${CIRCLE_SHA1}"
+          family: ${CONTAINER_NAME}
+          service-name: "${CONTAINER_NAME}-service"
           requires:
             - aws-ecr/build-and-push-image
