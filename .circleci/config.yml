@@ -16,6 +16,8 @@ workflows:
           create-repo: true
           dockerfile: Dockerfile
           path: .
+      - hold-deploy:
+          type: approval
       - aws-ecs/deploy-service-update:
           cluster-name: ${CLUSTER_NAME}
           container-image-name-updates: "container=${CONTAINER_NAME},tag=${CIRCLE_SHA1}"
@@ -23,3 +25,4 @@ workflows:
           service-name: "${CONTAINER_NAME}-service"
           requires:
             - aws-ecr/build-and-push-image
+            - hold-deploy
