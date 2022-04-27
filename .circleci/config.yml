@@ -18,6 +18,8 @@ workflows:
           path: .
       - hold-deploy:
           type: approval
+          requires:
+            - aws-ecr/build-and-push-image
       - aws-ecs/deploy-service-update:
           cluster-name: ${CLUSTER_NAME}
           container-image-name-updates: "container=${CONTAINER_NAME},tag=${CIRCLE_SHA1}"
